@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "author": "",
-  "license": "LGPL",
+  "license": "AGPL",
   "dependencies": {
     "babel-preset-solid": "^1.8.4",
     "pixi.js": "^7.3.2",

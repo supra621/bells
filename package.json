@@ -9,7 +9,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
-  "author": "",
+  "author": "Ryan Jackson",
   "license": "AGPL",
   "dependencies": {
     "babel-preset-solid": "^1.8.4",

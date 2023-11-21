@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "bells"
 version = "0.1.0"
-description = ""
+description = "A Django project"
 authors = ["Ryan Jackson <supra621@gmail.com>"]
 readme = "README.md"
 

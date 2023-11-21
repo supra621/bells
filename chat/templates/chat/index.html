@@ -1,0 +1,36 @@
+<!-- chat/templates/chat/index.html -->
+{% extends 'base.html' %}
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Chat Rooms</title>
+  {% block extra_css %}
+  <link rel="stylesheet" href="{% static 'chat/chat.css' %}">
+  {% endblock extra_css %}
+</head>
+{% block _body %}
+<body>
+  What chat room would you like to enter?
+  <br>
+  <label for="room-name-input">Room Name:</label>
+  <input id="room-name-input" type="text" size="100">
+  <br>
+  <input id="room-name-submit" type="button" value="Enter">
+
+  <script>
+    document.querySelector('#room-name-input').focus();
+    document.querySelector('#room-name-input').onkeyup = function(e) {
+      if (e.key === 'Enter') {  // enter, return
+        document.querySelector('#room-name-submit').click();
+      }
+    };
+
+    document.querySelector('#room-name-submit').onclick = function(e) {
+      let roomName = document.querySelector('#room-name-input').value;
+      window.location.pathname = '/chat/' + roomName + '/';
+    };
+  </script>
+</body>
+{% endblock _body %}
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  {% block _title %}
+  <title>{% block title %}Bells{% endblock title %}</title>
+  {% endblock _title %}
+  {# Easy enough to set as a dev setting in a base template. #}
+  <script type="module" src="{{ VITE_CLIENT_URL }}"></script>
+  {% block extra_css %}
+  {# Additional <link> tags go here #}
+  {% endblock extra_css %}
+</head>
+{% block _body %}
+<body>
+{% block body %}{% endblock body %}
+</body>
+{% endblock _body %}
+</html>

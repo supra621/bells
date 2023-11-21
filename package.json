@@ -1,0 +1,30 @@
+{
+  "name": "bells",
+  "version": "1.0.0",
+  "description": "A Django project",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 1234",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "author": "",
+  "license": "LGPL",
+  "dependencies": {
+    "babel-preset-solid": "^1.8.4",
+    "pixi.js": "^7.3.2",
+    "solid-js": "^1.8.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.9.1",
+    "css-loader": "^6.8.1",
+    "mini-css-extract-plugin": "^2.7.6",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0",
+    "vite-plugin-solid": "^2.7.2"
+  }
+}

@@ -284,7 +284,7 @@ version = "0.1.0"
 description = "A utility package for Django."
 category = "main"
 optional = false
-python-versions = "^3.11"
+python-versions = "^3.12"
 files = []
 develop = true
 
@@ -786,5 +786,5 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.11"
-content-hash = "1500a65029d44ad49010757a82eab4b66bb4b63bc3d61132540696425935d792"
+python-versions = "^3.12"
+content-hash = "b922c0a8086323ef034e1a32da69783750aea4a5885d749540bd61814263f34e"

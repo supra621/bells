@@ -6,7 +6,7 @@ authors = ["Ryan Jackson <supra621@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.12"
 django = "^4.2"
 channels = "^4.0.0"
 daphne = "^4.0.0"

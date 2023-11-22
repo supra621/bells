@@ -7,7 +7,7 @@ from channels.generic.websocket import WebsocketConsumer
 
 class ChatConsumer(WebsocketConsumer):
     room_group_name: str
-    room_name: typing.Any
+    room_name: str
 
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']

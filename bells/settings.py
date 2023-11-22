@@ -120,6 +120,7 @@ WSGI_APPLICATION = 'bells.wsgi.application'
 #     import mimetypes
 #     mimetypes.add_type('application/javascript', '.js', True)
 
+# Vite server should only run in dev/debug
 VITE_CLIENT_URL = 'http://localhost:1234/static/@vite/client'
 
 VITE_URL = 'http://localhost:1234/'

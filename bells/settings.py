@@ -49,6 +49,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'var' / 'db.sqlite3',
+        # Make sure tests don't run in-memory sqlite
         "TEST": {
             "NAME": BASE_DIR / 'tmp' / 'db.sqlite3'
         }

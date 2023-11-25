@@ -11,12 +11,14 @@ django = "^4.2"
 channels = "^4.0.0"
 channels-redis = "^4.1.0"
 daphne = "^4.0.0"
-selenium = "^4.15"
 
 # Local
 [tool.poetry.dependencies.django_base]
 path = "C:/Users/supra/PycharmProjects/django_base/"
 develop = true
+
+[tool.poetry.group.test.dependencies]
+selenium = "^4.15"
 
 [build-system]
 requires = ["poetry-core"]

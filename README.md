@@ -13,7 +13,9 @@ A reference implementation of several libraries integrated with Django.
 - Django
 - Poetry
   - Python dependency management
-  - Plus a local package dependency
+  - Includes a local package dependency, `django_base`
+- Selenium
+  - For testing `channels`
 
 ## JS
 

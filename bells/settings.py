@@ -66,15 +66,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'django_base',
     'accounts',
     'core',
     'chat',
 ]
 
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
 LANGUAGE_CODE = 'en-us'
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -88,9 +94,7 @@ ROOT_URLCONF = 'bells.urls'
 
 STATICFILES_DIRS = ['static']
 
-# STATIC_URL = 'static/'
-# STATIC_URL = 'http://localhost:1234/'
-STATIC_URL = 'http://localhost:1234/static/'
+STATIC_URL = 'static/'
 
 TEMPLATES = [
     {

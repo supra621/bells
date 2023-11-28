@@ -8,6 +8,7 @@
   {% endblock _title %}
   {# Easy enough to set as a dev setting in a base template. #}
   <script type="module" src="{{ VITE_CLIENT_URL }}"></script>
+  <link rel="stylesheet" href="{% static 'base.css' %}">
   {% block extra_css %}
   {# Additional <link> tags go here #}
   {% endblock extra_css %}

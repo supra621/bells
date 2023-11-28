@@ -11,6 +11,7 @@ django = "^4.2"
 channels = "^4.0.0"
 channels-redis = "^4.1.0"
 daphne = "^4.0.0"
+django-debug-toolbar = "^4.2"
 
 # Local
 [tool.poetry.dependencies.django_base]

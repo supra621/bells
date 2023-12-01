@@ -18,3 +18,7 @@ reverse proxy would fit in the mix.
 It does bring about an interesting thought, though. If I remember right, Django
 static file requests bypass middleware.
 """
+
+from .celery import app as celery_app
+
+__all__ = ('celery_app',)

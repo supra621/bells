@@ -40,19 +40,24 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],
+            'hosts': [('localhost', 6379)],
         }
     }
 }
 
+# Django 4.2 states: Using a service name for testing purposes is not supported.
+# This may be implemented later. https://code.djangoproject.com/ticket/33685
+with open(BASE_DIR / 'etc' / 'db.txt', 'r') as file:
+    DB_PASSWORD = file.read().strip()
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'var' / 'db.sqlite3',
-        # Make sure tests don't run in-memory sqlite
-        "TEST": {
-            "NAME": BASE_DIR / 'tmp' / 'db.sqlite3'
-        }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'python_bells',
+        'USER': 'python_bells_owner',  # env
+        'PASSWORD': DB_PASSWORD,       # env
+        'HOST': 'localhost',           # env
+        'PORT': '5432',                # env
     }
 }
 
@@ -121,11 +126,11 @@ USE_TZ = True
 
 WSGI_APPLICATION = 'bells.wsgi.application'
 
-# if DEBUG:
-#     import mimetypes
-#     mimetypes.add_type('application/javascript', '.js', True)
+# Additional settings
+
+GREMLIN_URL = 'ws://localhost:8182/gremlin'
 
 # Vite server should only run in dev/debug
-VITE_CLIENT_URL = 'http://localhost:1234/static/@vite/client'
+VITE_CLIENT_URL = 'http://localhost:1234/@vite/client'
 
 VITE_URL = 'http://localhost:1234/'

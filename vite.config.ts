@@ -4,30 +4,27 @@ import solidPlugin from 'vite-plugin-solid';
 
 export default defineConfig({
     appType: 'custom',
-    // base: base public path when served?
-    base: '/static/',
     plugins: [
         solidPlugin(),
     ],
-    publicDir: "static",
     build: {
         manifest: true,
         rollupOptions: {
             // input: '/src/index.ts'
             input: [
                 '/src/index.ts',
-                '/chat/static/chat/*',
-                '/core/static/core/main.ts',
+                '/chat/assets/chat/*',
+                '/core/assets/core/main.ts',
             ]
         }
     },
     server: {
         proxy: {
-            '^/static/chat/(?!.*/)': {
+            '^/assets/chat/(?!.*/)': {
                 target: 'http://localhost:1234/static/chat/',
                 changeOrigin: true,
             },
-            '^/static/core/(?!.*/)': {
+            '^/assets/core/(?!.*/)': {
                 target: 'http://localhost:1234/static/core/',
                 changeOrigin: true,
             },

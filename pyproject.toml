@@ -8,10 +8,15 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 django = "^4.2"
+aiohttp = "^3.9"        # gremlin fallback dependency
+async-timeout = "^4.0"  # gremlin fallback dependency
+celery = {extras = ["redis"], version = "^5.3.6"}
 channels = "^4.0.0"
 channels-redis = "^4.1.0"
 daphne = "^4.0.0"
 django-debug-toolbar = "^4.2"
+gremlinpython = "^3.7"
+psycopg = {extras = ["binary"], version ="^3.1"}
 
 # Local
 [tool.poetry.dependencies.django_base]

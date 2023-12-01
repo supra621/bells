@@ -1,3 +1,5 @@
+import time
+
 from channels.testing import ChannelsLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
@@ -55,6 +57,7 @@ class ChatTests(ChannelsLiveServerTestCase):
 
             self._switch_to_window(0)
             self._post_message("hello")
+
             WebDriverWait(self.driver, 2).until(
                 lambda _: "hello" in self._chat_log_value,
                 "Message was not received by window 1 from window 1",
@@ -95,9 +98,11 @@ class ChatTests(ChannelsLiveServerTestCase):
 
     def _switch_to_window(self, window_index):
         self.driver.switch_to.window(self.driver.window_handles[window_index])
+        time.sleep(1)
 
     def _post_message(self, message):
         ActionChains(self.driver).send_keys(message, Keys.ENTER).perform()
+        time.sleep(1)
 
     @property
     def _chat_log_value(self):

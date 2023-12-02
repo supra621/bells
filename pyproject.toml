@@ -20,7 +20,8 @@ psycopg = {extras = ["binary"], version ="^3.1"}
 
 # Local
 [tool.poetry.dependencies.django_base]
-path = "C:/Users/supra/PycharmProjects/django_base/"
+# path = "C:/Users/supra/PycharmProjects/django_base/"
+path = "/python_local/django_base/"
 develop = true
 
 [tool.poetry.group.test.dependencies]

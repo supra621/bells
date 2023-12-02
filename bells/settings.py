@@ -54,10 +54,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'python_bells',
-        'USER': 'python_bells_owner',  # env
-        'PASSWORD': DB_PASSWORD,       # env
-        'HOST': 'localhost',           # env
-        'PORT': '5432',                # env
+        'USER': 'python_bells_owner',    # env
+        'PASSWORD': DB_PASSWORD,         # env
+        # 'HOST': '127.0.0.1',           # env, if running from system
+        'HOST': 'host.docker.internal',  # env, if using docker
+        'PORT': '5432',                  # env
     }
 }
 

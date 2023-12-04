@@ -5,11 +5,6 @@ LABEL authors="supra"
 # RUN useradd -ms /bin/bash bells
 # USER bells
 
-#RUN --mount=source=/Users/supra/PycharmProjects/django_base,destination=/python_local/django_base \
-#    ls
-
-#RUN ls
-
 # Upgrade pip, I guess
 RUN python3 -m pip install --upgrade pip
 
@@ -23,16 +18,26 @@ RUN ${POETRY_HOME}/bin/poetry --version
 WORKDIR /code
 COPY pyproject.toml poetry.lock /code/
 
+# "if local"
 COPY --from=django_base . /python_local/django_base
 
+# install Python dependencies
 RUN ${POETRY_HOME}/bin/poetry install
 
+# install Nodejs dependencies
+
+
+# copy source code
 COPY . /code/
 
 ENV PATH="${PATH}:${POETRY_HOME}/bin"
+
+# npm needs to be installed for dev
 
 
 # Start the server?
 # 0.0.0.0:8000 seems to be important for development
 ENTRYPOINT ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
 #ENTRYPOINT ["/bin/sh"]
+
+#CMD [""]

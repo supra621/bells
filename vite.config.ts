@@ -4,6 +4,7 @@ import solidPlugin from 'vite-plugin-solid';
 
 export default defineConfig({
     appType: 'custom',
+    base: "/assets/",
     plugins: [
         solidPlugin(),
     ],
@@ -19,16 +20,7 @@ export default defineConfig({
         }
     },
     server: {
-        proxy: {
-            '^/assets/chat/(?!.*/)': {
-                target: 'http://localhost:1234/static/chat/',
-                changeOrigin: true,
-            },
-            '^/assets/core/(?!.*/)': {
-                target: 'http://localhost:1234/static/core/',
-                changeOrigin: true,
-            },
-        },
+        host: true,
         strictPort: true
     },
 });

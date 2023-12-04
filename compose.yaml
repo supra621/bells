@@ -1,17 +1,40 @@
 services:
   db:
     image: postgres
+    restart: always
     volumes:
       - ./var/data/db:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: postgres
+#      POSTGRES_USER: postgres
+      POSTGRES_USER: python_bells
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+#    ports:
+#      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q"]
+      retries: 3
+
     secrets:
       - postgres_password
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
 
 #  web-deps:
 #    build:
 #      context: ~/PycharmProjects/django_base
+
+  node:
+    image: node:20
+    build:
+      context: .
+      dockerfile: node.Dockerfile
+#    volumes:
+#      - .:/code
+    ports:
+      - "1234:1234"
 
   web:
     stdin_open: true
@@ -27,7 +50,13 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+        restart: true
+      node:
+        condition: service_started
+      redis:
+        condition: service_started
 
 #volumes:
 #  django_base:

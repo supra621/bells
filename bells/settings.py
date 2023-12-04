@@ -40,7 +40,8 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('localhost', 6379)],
+            # 'hosts': [('localhost', 6379)],
+            'hosts': [('host.docker.internal', 6379)],
         }
     }
 }
@@ -53,11 +54,14 @@ with open(BASE_DIR / 'etc' / 'db.txt', 'r') as file:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': 'python_bells',
+        # 'USER': 'python_bells_owner',    # env
         'NAME': 'python_bells',
-        'USER': 'python_bells_owner',    # env
+        'USER': 'python_bells',
         'PASSWORD': DB_PASSWORD,         # env
         # 'HOST': '127.0.0.1',           # env, if running from system
-        'HOST': 'host.docker.internal',  # env, if using docker
+        # 'HOST': 'host.docker.internal',  # env, if using docker
+        'HOST': 'db',
         'PORT': '5432',                  # env
     }
 }
@@ -98,7 +102,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'bells.urls'
 
-STATICFILES_DIRS = ['static']
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
 
 STATIC_URL = 'static/'
 
@@ -108,6 +114,7 @@ TEMPLATES = [
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
+            'builtins': ['django_base.builtins'],
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -129,9 +136,12 @@ WSGI_APPLICATION = 'bells.wsgi.application'
 
 # Additional settings
 
+ASSET_URL = 'http://localhost:1234/assets/'
+
 GREMLIN_URL = 'ws://localhost:8182/gremlin'
 
 # Vite server should only run in dev/debug
-VITE_CLIENT_URL = 'http://localhost:1234/@vite/client'
+VITE_CLIENT_URL = 'http://localhost:1234/assets/@vite/client'
 
-VITE_URL = 'http://localhost:1234/'
+# VITE_URL = 'http://localhost:1234/'
+VITE_URL = 'assets/'

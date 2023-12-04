@@ -7,7 +7,7 @@
   <title>{% block title %}Bells{% endblock title %}</title>
   {% endblock _title %}
   {# Easy enough to set as a dev setting in a base template. #}
-  <script type="module" src="{{ VITE_CLIENT_URL }}"></script>
+  <script type="module" src="{% vite %}"></script>
   <link rel="stylesheet" href="{% static 'base.css' %}">
   {% block extra_css %}
   {# Additional <link> tags go here #}

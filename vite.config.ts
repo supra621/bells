@@ -21,6 +21,12 @@ export default defineConfig({
     },
     server: {
         host: true,
-        strictPort: true
+        // hmr: {
+        //     port: 1235
+        // },
+        strictPort: true,
+        // watch: {
+        //     usePolling: true
+        // }
     },
 });

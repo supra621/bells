@@ -1,6 +1,7 @@
+__pycache__/
+.idea/
 /dist/
 /etc/
 /node_modules/
 /tmp/
 /var/
-/.idea/dataSources.xml

@@ -15,29 +15,19 @@ RUN ${POETRY_HOME}/bin/pip install poetry==1.4.0
 RUN ${POETRY_HOME}/bin/poetry --version
 
 # Copy code?
-WORKDIR /code
-COPY pyproject.toml poetry.lock /code/
+WORKDIR /code/app
+COPY pyproject.toml poetry.lock /code/app/
 
 # "if local"
-COPY --from=django_base . /python_local/django_base
+COPY --from=django_base . ../django_base
 
 # install Python dependencies
 RUN ${POETRY_HOME}/bin/poetry install
 
-# install Nodejs dependencies
-
-
 # copy source code
-COPY . /code/
+COPY . /code/app/
 
 ENV PATH="${PATH}:${POETRY_HOME}/bin"
 
-# npm needs to be installed for dev
-
-
-# Start the server?
 # 0.0.0.0:8000 seems to be important for development
 ENTRYPOINT ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
-#ENTRYPOINT ["/bin/sh"]
-
-#CMD [""]

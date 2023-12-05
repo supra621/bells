@@ -5,14 +5,17 @@ services:
     volumes:
       - ./var/data/db:/var/lib/postgresql/data
     environment:
-#      POSTGRES_USER: postgres
+      POSTGRES_DB: python_bells
       POSTGRES_USER: python_bells
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
-#    ports:
-#      - "5432:5432"
+    # Ports need to be exposed for dev manage.py commands
+    ports:
+      - "5432:5432"
     healthcheck:
-      test: ["CMD", "pg_isready", "-q"]
-      retries: 3
+      test: ["CMD-SHELL", "pg_isready -U python_bells"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
 
     secrets:
       - postgres_password
@@ -22,32 +25,28 @@ services:
     ports:
       - "6379:6379"
 
-#  web-deps:
-#    build:
-#      context: ~/PycharmProjects/django_base
-
   vite:
     build:
       context: .
       dockerfile: vite.Dockerfile
     volumes:
-      - .:/code
       - /code/node_modules/
+      - .:/code
     ports:
       - "1234:1234"
-#      - "1235:1235"
 
   web:
-#    stdin_open: true
-#    tty: true
     build:
       context: .
       additional_contexts:
         # If building from local, editable source:
-        django_base: ~/PycharmProjects/django_base
+        django_base: ../django_base
+    environment:
+      HOST: "db"
     volumes:
-      - .:/code
-      - ~/PycharmProjects/django_base:/python_local/django_base
+      - /code/node_modules
+      - .:/code/app:ro
+      - ../django_base:/code/django_base:ro
     ports:
       - "8000:8000"
     depends_on:
@@ -58,14 +57,14 @@ services:
         condition: service_started
       vite:
         condition: service_started
-
-#volumes:
-#  django_base:
-#    driver: local
-#    driver_opts:
-#      type: none
-#      device: C:/Users/supra/PycharmProjects/django_base
-#      o: bind
+# develop options use copying to the container volume
+#    develop:
+#      watch:
+#        - action: sync
+#          path: .
+#          target: /code/app
+#          ignore:
+#            - node_modules
 
 secrets:
   postgres_password:

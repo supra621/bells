@@ -29,7 +29,6 @@ const app: Application<ICanvas> = new Application({
 
 app;
 
-console.log('hmr?');
-console.log('hmr?');
+// console.log('hmr?');
 
 render(() => <MyTsComponent />, document.getElementById('app')!);

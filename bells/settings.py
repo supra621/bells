@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,7 +41,6 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            # 'hosts': [('localhost', 6379)],
             'hosts': [('host.docker.internal', 6379)],
         }
     }
@@ -48,20 +48,16 @@ CHANNEL_LAYERS = {
 
 # Django 4.2 states: Using a service name for testing purposes is not supported.
 # This may be implemented later. https://code.djangoproject.com/ticket/33685
-with open(BASE_DIR / 'etc' / 'db.txt', 'r') as file:
+with open(BASE_DIR / 'etc' / 'postgres.txt', 'r') as file:
     DB_PASSWORD = file.read().strip()
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        # 'NAME': 'python_bells',
-        # 'USER': 'python_bells_owner',    # env
         'NAME': 'python_bells',
         'USER': 'python_bells',
         'PASSWORD': DB_PASSWORD,         # env
-        # 'HOST': '127.0.0.1',           # env, if running from system
-        # 'HOST': 'host.docker.internal',  # env, if using docker
-        'HOST': 'db',
+        'HOST': os.getenv('HOST', '127.0.0.1'),
         'PORT': '5432',                  # env
     }
 }

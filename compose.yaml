@@ -1,13 +1,9 @@
 services:
-#  celery_worker:
-#    build:
-#      context: .
-
   db:
     image: postgres
     restart: always
     volumes:
-      - ./var/data/db:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: python_bells
       POSTGRES_USER: python_bells
@@ -44,6 +40,19 @@ services:
     ports:
       - "1234:1234"
 
+  celery_worker:
+    build:
+      context: .
+      additional_contexts:
+        django_base: ../django_base
+    volumes:
+      - /code/node_modules
+      - .:/code/app:ro
+      - ../django_base:/code/django_base:ro
+    depends_on:
+      - rabbitmq
+      - redis
+
   web:
     build:
       context: .
@@ -69,6 +78,9 @@ services:
         condition: service_started
       vite:
         condition: service_started
+
+volumes:
+  db-data:
 
 # develop options use copying to the container volume
 #    develop:

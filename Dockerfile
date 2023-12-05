@@ -37,4 +37,4 @@ RUN sed -i 's/\r$//g' /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # 0.0.0.0:8000 seems to be important for development
-ENTRYPOINT ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+# ENTRYPOINT ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]

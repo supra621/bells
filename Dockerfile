@@ -24,10 +24,17 @@ COPY --from=django_base . ../django_base
 # install Python dependencies
 RUN ${POETRY_HOME}/bin/poetry install
 
+ENV PATH="${PATH}:${POETRY_HOME}/bin"
+
 # copy source code
 COPY . /code/app/
 
-ENV PATH="${PATH}:${POETRY_HOME}/bin"
+# The celery daemon needs a few other things
+COPY celeryd.sh /etc/init.d/celeryd
+
+COPY entrypoint.sh /entrypoint.sh
+RUN sed -i 's/\r$//g' /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # 0.0.0.0:8000 seems to be important for development
 ENTRYPOINT ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]

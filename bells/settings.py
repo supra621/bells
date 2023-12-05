@@ -134,6 +134,10 @@ WSGI_APPLICATION = 'bells.wsgi.application'
 
 ASSET_URL = 'http://localhost:1234/assets/'
 
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672'
+
+CELERY_RESULT_BACKEND = 'redis://host.docker.internal:6379'
+
 GREMLIN_URL = 'ws://localhost:8182/gremlin'
 
 # Vite server should only run in dev/debug

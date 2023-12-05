@@ -1,4 +1,8 @@
 services:
+#  celery_worker:
+#    build:
+#      context: .
+
   db:
     image: postgres
     restart: always
@@ -19,6 +23,11 @@ services:
 
     secrets:
       - postgres_password
+
+  rabbitmq:
+    image: rabbitmq
+#    volumes:
+#      - rabbitmq.conf:/etc/rabbitmq.rabbitmq.conf
 
   redis:
     image: redis
@@ -41,6 +50,7 @@ services:
       additional_contexts:
         # If building from local, editable source:
         django_base: ../django_base
+    entrypoint: /entrypoint.sh
     environment:
       HOST: "db"
     volumes:
@@ -53,10 +63,13 @@ services:
       db:
         condition: service_healthy
         restart: true
+      rabbitmq:
+        condition: service_started
       redis:
         condition: service_started
       vite:
         condition: service_started
+
 # develop options use copying to the container volume
 #    develop:
 #      watch:

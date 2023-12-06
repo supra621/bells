@@ -17,6 +17,7 @@ daphne = "^4.0.0"
 django-debug-toolbar = "^4.2"
 gremlinpython = "^3.7"
 psycopg = {extras = ["binary"], version ="^3.1"}
+pyarango = "^2"
 
 # Local
 [tool.poetry.dependencies.django_base]

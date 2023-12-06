@@ -20,6 +20,9 @@ services:
     secrets:
       - postgres_password
 
+  janusgraph:
+    image: janusgraph/janusgraph
+
   rabbitmq:
     image: rabbitmq
 #    volumes:

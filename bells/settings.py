@@ -12,7 +12,10 @@ DEBUG = True
 
 # ###
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    'nginx',
+]
 
 ASGI_APPLICATION = 'bells.asgi.application'
 

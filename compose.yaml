@@ -27,6 +27,15 @@ services:
     secrets:
       - postgres_password
 
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+
   rabbitmq:
     image: rabbitmq
 #    volumes:
@@ -67,14 +76,17 @@ services:
         # If building from local, editable source:
         django_base: ../django_base
     entrypoint: /entrypoint.sh
+#    command: daphne -u /tmp/daphne.sock bells.asgi.application:application
     environment:
       HOST: "db"
     volumes:
       - /code/node_modules
-      - .:/code/app:ro
       - ../django_base:/code/django_base:ro
-    ports:
-      - "8000:8000"
+      - .:/code/app:ro
+#    ports:
+#      - "8000:8000"
+    expose:
+      - 8000
     depends_on:
       db:
         condition: service_healthy
@@ -88,6 +100,7 @@ services:
 
 volumes:
   db-data:
+  static_volume:
 
 # develop options use copying to the container volume
 #    develop:

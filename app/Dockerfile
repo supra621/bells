@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.12-slim
 LABEL authors="supra"
 
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -22,7 +22,7 @@ WORKDIR /code/app/
 COPY pyproject.toml poetry.lock /code/app/
 
 # "if local"
-COPY --from=django_base . ../django_base
+COPY --from=django_base . ../../django_base
 
 # install Python dependencies
 RUN ${POETRY_HOME}/bin/poetry install
@@ -31,7 +31,6 @@ ENV PATH="${PATH}:${POETRY_HOME}/bin"
 
 # copy source code
 COPY . /code/app/
-RUN mkdir /code/app/web/staticfiles
 
 # The celery daemon needs a few other things
 COPY celeryd.sh /etc/init.d/celeryd

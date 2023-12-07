@@ -1,6 +1,12 @@
-*?.bak.
+**/.env
+**/.git
+**/coverage
 .idea
+Dockerfile
+README.md
+compose.yaml
 etc
 node_modules
 tmp
 var
+*?.bak.

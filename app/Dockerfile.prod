@@ -1,0 +1,38 @@
+FROM python:3.12-slim as builder
+WORKDIR /usr/src/app
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+RUN apt update && \
+    apt install -y --no-install-recommends gcc
+
+RUN pip install --upgrade pip
+
+ENV POETRY_HOME=/opt/poetry
+RUN python3 -m venv ${POETRY_HOME} \
+    && ${POETRY_HOME}/bin/pip install poetry
+
+COPY pyproject.toml poetry.lock /usr/src/app/
+COPY --from=django_base . ../../django_base
+ENV PATH="${PATH}:${POETRY_HOME}/bin"
+
+RUN poetry install --without test
+COPY . /usr/src/app/
+
+
+RUN poetry build
+
+
+FROM python:3.12-slim
+RUN mkdir -p /home/app
+RUN addgroup --system app && adduser --system --group app
+
+ENV HOME=/home/app
+ENV APP_HOME=/home/app/web
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
+
+RUN apt update && apt install -y --no-install-recommends  # netcat?
+COPY --from=builder /usr/src/app
+
+
+RUN mkdir /code/app/web/staticfiles

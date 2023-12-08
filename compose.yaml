@@ -1,23 +1,15 @@
 services:
   arangodb:
     image: arangodb
-    environment:
-      ARANGO_NO_AUTH: 1
-    ports:
-      - "8529:8529"
 
   db:
     image: postgres
-    restart: always
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: python_bells
       POSTGRES_USER: python_bells
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
-    # Ports need to be exposed for dev manage.py commands
-    ports:
-      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U python_bells"]
       interval: 1s
@@ -27,66 +19,26 @@ services:
     secrets:
       - postgres_password
 
-  nginx:
-    build: ./nginx
-    volumes:
-      - static_volume:/home/app/web/staticfiles
-    ports:
-      - 1337:80
-    depends_on:
-      - web
-
   rabbitmq:
     image: rabbitmq
-#    volumes:
-#      - rabbitmq.conf:/etc/rabbitmq.rabbitmq.conf
 
   redis:
     image: redis
-    ports:
-      - "6379:6379"
 
-  vite:
+  celery-worker:
     build:
-      context: .
-      dockerfile: vite.Dockerfile
-    volumes:
-      - /code/node_modules/
-      - .:/code
-    ports:
-      - "1234:1234"
-
-  celery_worker:
-    build:
-      context: .
-      additional_contexts:
-        django_base: ../django_base
-    volumes:
-      - /code/node_modules
-      - .:/code/app:ro
-      - ../django_base:/code/django_base:ro
+      context: ./app
+      dockerfile: Dockerfile.dev
     depends_on:
       - rabbitmq
       - redis
 
   web:
     build:
-      context: .
-      additional_contexts:
-        # If building from local, editable source:
-        django_base: ../django_base
-    entrypoint: /entrypoint.sh
-#    command: daphne -u /tmp/daphne.sock bells.asgi.application:application
+      context: ./app
+      dockerfile: Dockerfile.dev
     environment:
       HOST: "db"
-    volumes:
-      - /code/node_modules
-      - ../django_base:/code/django_base:ro
-      - .:/code/app:ro
-#    ports:
-#      - "8000:8000"
-    expose:
-      - 8000
     depends_on:
       db:
         condition: service_healthy

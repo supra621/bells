@@ -1,0 +1,89 @@
+services:
+  arangodb:
+    environment:
+      ARANGO_NO_AUTH: 1
+    ports:
+      - "8529:8529"
+
+  db:
+    restart: always
+    # Ports need to be exposed for dev manage.py commands
+    ports:
+      - "5432:5432"
+
+#  rabbitmq:
+#    volumes:
+#      - rabbitmq.conf:/etc/rabbitmq.rabbitmq.conf
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  vite:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.vite
+    volumes:
+      - /code/app/node_modules
+      - ./app:/code/app
+    ports:
+      - "1234:1234"
+
+  celery-worker:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.dev
+      additional_contexts:
+        django_base: ../django_base
+    volumes:
+      - /code/bells/app/node_modules
+      - ../django_base:/code/django_base:ro
+      - ./app:/code/bells/app:ro
+    depends_on:
+      - rabbitmq
+      - redis
+
+  web:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.dev
+      additional_contexts:
+        # If building from local, editable source:
+        django_base: ../django_base
+    entrypoint: /entrypoint.sh
+#    command: daphne -u /tmp/daphne.sock bells.asgi.application:application
+    environment:
+      HOST: "db"
+    volumes:
+      - /code/bells/app/node_modules
+      - ../django_base:/code/django_base:ro
+      - ./app:/code/bells/app:ro
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+      rabbitmq:
+        condition: service_started
+      redis:
+        condition: service_started
+      vite:
+        condition: service_started
+
+volumes:
+  db-data:
+  static_volume:
+
+# develop options use copying to the container volume
+#    develop:
+#      watch:
+#        - action: sync
+#          path: .
+#          target: /code/app
+#          ignore:
+#            - node_modules
+
+secrets:
+  postgres_password:
+    file: ./app/etc/postgres.txt

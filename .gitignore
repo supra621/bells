@@ -1,8 +1,8 @@
 *?.bak.*
+etc/
+node_modules/
 __pycache__/
 .idea/
 /dist/
-/etc/
-/node_modules/
 /tmp/
 /var/

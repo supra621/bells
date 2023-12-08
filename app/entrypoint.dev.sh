@@ -4,7 +4,7 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-cd /code/app
+cd /code/bells/app
 
 export POETRY_ENV
 POETRY_ENV=$(poetry env info --path)

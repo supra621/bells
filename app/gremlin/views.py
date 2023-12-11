@@ -1,17 +1,27 @@
+from itertools import cycle
+
 from django.http import HttpResponse
 
 from pyArango.connection import *
+from pyArango.theExceptions import CreationError
+
+names = cycle(['simba', 'mufasa', 'rafiki', 'nala', 'surabi', 'pumba', 'timon'])
 
 
 def test_graph(request):
     conn = Connection(arangoURL='http://arangodb:8529')
-    # conn.createDatabase(name='test_db')
-    db = conn['test_db']
-    # collection = db.createCollection(name='users')
-    collection = db['users']
+    try:
+        db = conn.createDatabase(name='test_db')
+    except CreationError:
+        db = conn['test_db']
+    try:
+        collection = db.createCollection(name='users')
+    except CreationError:
+        collection = db['users']
     for i in range(20):
+        name = next(names)
         doc = collection.createDocument()
-        doc['name'] = f'Tesla {i}'
+        doc['name'] = f'{name} {i}'
         doc['number'] = i
         doc['species'] = 'human'
         doc.save()
@@ -24,5 +34,5 @@ def test_graph(request):
     # doc.delete()
     example = {'species': 'human'}
     query = collection.fetchByExample(example, batchSize=20, count=True)
-    results = [x for x in query]
+    results = [x['name'] for x in query]
     return HttpResponse(results)

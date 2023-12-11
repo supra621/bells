@@ -3,7 +3,6 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 with open(BASE_DIR / 'etc' / 'sk.txt', 'r') as file:
     SECRET_KEY = file.read().strip()
 
@@ -101,6 +100,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'bells.urls'
 
+# noinspection PyUnresolvedReferences
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]

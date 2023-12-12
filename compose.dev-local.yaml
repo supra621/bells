@@ -1,0 +1,48 @@
+# "dev-local" encompasses deploying non-Django resources, such that the local
+# environment may run their own Django and Vite servers.
+# This implies binding additional ports for Django to be able to connect.
+
+services:
+  arangodb:
+    image: arangodb
+    environment:
+      ARANGO_NO_AUTH: 1
+    ports:
+      - "8529:8529"
+    volumes:
+      - arango-app-data:/var/lib/arangodb3-apps
+      - arango-data:/var/lib/arangodb3
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: python_bells
+      POSTGRES_USER: python_bells
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    # Ports need to be exposed for dev manage.py commands
+    ports:
+      - "5432:5432"
+    restart: always
+    secrets:
+      - postgres_password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq
+#    volumes:
+#      - rabbitmq.conf:/etc/rabbitmq.rabbitmq.conf
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+secrets:
+  postgres_password:
+    file: ./app/etc/postgres.txt
+
+volumes:
+  arango-app-data:
+  arango-data:
+  db-data:

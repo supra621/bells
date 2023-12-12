@@ -1,4 +1,20 @@
+# "prod" deploys all services to containers as if they were running in
+# production.
+# Django should run the Daphne server. Vite should have already built and
+# bundled into a dist/ folder.
+
 services:
+  arangodb:
+    image: arangodb
+    ports:
+      - "8529:8529"
+
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
   nginx:
     build: ./nginx
     volumes:
@@ -8,9 +24,30 @@ services:
     depends_on:
       - web
 
+  rabbitmq:
+    image: rabbitmq
+
   redis:
-    ports: !reset []
+    image: redis
 
   web:
     build:
+      context: ./app
       dockerfile: Dockerfile.prod
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+      rabbitmq:
+        condition: service_started
+      redis:
+        condition: service_started
+    environment:
+      DB_HOST: "db"
+
+secrets:
+  postgres_password:
+    file: ./app/etc/postgres.txt
+
+volumes:
+  db-data:

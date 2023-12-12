@@ -1,15 +1,16 @@
 from itertools import cycle
 
+from django.conf import settings
 from django.http import HttpResponse
 
 from pyArango.connection import *
-from pyArango.theExceptions import CreationError
+from pyArango.theExceptions import CreationError, UniqueConstrainViolation
 
 names = cycle(['simba', 'mufasa', 'rafiki', 'nala', 'surabi', 'pumba', 'timon'])
 
 
 def test_graph(request):
-    conn = Connection(arangoURL='http://arangodb:8529')
+    conn = Connection(arangoURL=settings.ARANGO_URL)
     try:
         db = conn.createDatabase(name='test_db')
     except CreationError:
@@ -24,7 +25,11 @@ def test_graph(request):
         doc['name'] = f'{name} {i}'
         doc['number'] = i
         doc['species'] = 'human'
-        doc.save()
+        doc['_key'] = f'{name}'
+        try:
+            doc.save()
+        except UniqueConstrainViolation:
+            continue
     doc = collection.createDocument()
     doc['name'] = 'Tesla-101'
     doc['number'] = 101

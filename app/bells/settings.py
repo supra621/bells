@@ -1,16 +1,20 @@
 import os
 from pathlib import Path
 
+from . import env
+
+# TODO: Factor out environment variables
+#  Docker Compose convention is to use .env files in the compose.yaml root
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# TODO: Secret
 with open(BASE_DIR / 'etc' / 'sk.txt', 'r') as file:
     SECRET_KEY = file.read().strip()
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.DEBUG
 
-# ###
-
+# TODO: Env
 ALLOWED_HOSTS = [
     'localhost',
     'nginx',
@@ -39,6 +43,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'accounts.User'
 
+# TODO: Env
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -50,17 +55,19 @@ CHANNEL_LAYERS = {
 
 # Django 4.2 states: Using a service name for testing purposes is not supported.
 # This may be implemented later. https://code.djangoproject.com/ticket/33685
+# TODO: Secret
 with open(BASE_DIR / 'etc' / 'postgres.txt', 'r') as file:
-    DB_PASSWORD = file.read().strip()
+    DATABASE_PASSWORD = file.read().strip()
 
+# TODO: Env
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'python_bells',
         'USER': 'python_bells',
-        'PASSWORD': DB_PASSWORD,         # env
-        'HOST': os.getenv('HOST', '127.0.0.1'),
-        'PORT': '5432',                  # env
+        'PASSWORD': DATABASE_PASSWORD,
+        'HOST': env.DATABASE_HOST,
+        'PORT': env.DATABASE_PORT,
     }
 }
 
@@ -100,7 +107,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'bells.urls'
 
-# noinspection PyUnresolvedReferences
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
@@ -135,16 +141,24 @@ WSGI_APPLICATION = 'bells.wsgi.application'
 
 # Additional settings
 
+ARANGO_HOST = env.ARANGO_HOST
+ARANGO_PORT = env.ARANGO_PORT
+ARANGO_URL = f'{ARANGO_HOST}:{ARANGO_PORT}/'
+
+# ARANGO_URL = 'http://arangodb:8529'
+
 ASSET_URL = 'http://localhost:1234/assets/'
 
 CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672'
 
 CELERY_RESULT_BACKEND = 'redis://host.docker.internal:6379'
 
-GREMLIN_URL = 'ws://localhost:8182/gremlin'
-
+# TODO: Debug only
 # Vite server should only run in dev/debug
 VITE_CLIENT_URL = 'http://localhost:1234/assets/@vite/client'
 
 # VITE_URL = 'http://localhost:1234/'
 VITE_URL = 'assets/'
+
+print('settings')
+print(DEBUG)

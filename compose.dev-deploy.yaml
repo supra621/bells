@@ -1,23 +1,37 @@
+# "dev-deploy" containerizes Django and Vite
+# Django and Vite should both be running their development servers with bind
+# mounts to source code
+
 services:
   arangodb:
+    image: arangodb
     environment:
       ARANGO_NO_AUTH: 1
     ports:
       - "8529:8529"
 
   db:
+    image: postgres
+    environment:
+      POSTGRES_DB: python_bells
+      POSTGRES_USER: python_bells
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U python_bells"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
     restart: always
-    # Ports need to be exposed for dev manage.py commands
-    ports:
-      - "5432:5432"
+    secrets:
+      - postgres_password
+    volumes:
+      - db-data:/var/lib/postgresql/data
 
-#  rabbitmq:
-#    volumes:
-#      - rabbitmq.conf:/etc/rabbitmq.rabbitmq.conf
+  rabbitmq:
+    image: rabbitmq
 
   redis:
-    ports:
-      - "6379:6379"
+    image: redis
 
   vite:
     build:
@@ -29,37 +43,28 @@ services:
     ports:
       - "1234:1234"
 
+  # Django containers
   celery-worker:
     build:
       context: ./app
       dockerfile: Dockerfile.dev
       additional_contexts:
         django_base: ../django_base
+    depends_on:
+      - rabbitmq
+      - redis
+    env_file: .env.dev-deploy
     volumes:
       - /code/bells/app/node_modules
       - ../django_base:/code/django_base:ro
       - ./app:/code/bells/app:ro
-    depends_on:
-      - rabbitmq
-      - redis
 
   web:
     build:
       context: ./app
       dockerfile: Dockerfile.dev
       additional_contexts:
-        # If building from local, editable source:
         django_base: ../django_base
-    entrypoint: /entrypoint.sh
-#    command: daphne -u /tmp/daphne.sock bells.asgi.application:application
-    environment:
-      HOST: "db"
-    volumes:
-      - /code/bells/app/node_modules
-      - ../django_base:/code/django_base:ro
-      - ./app:/code/bells/app:ro
-    ports:
-      - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -70,19 +75,20 @@ services:
         condition: service_started
       vite:
         condition: service_started
+    entrypoint: /entrypoint.dev-deploy.sh
+    env_file: .env.dev-deploy
+    environment:
+      DB_HOST: "db"
+    ports:
+      - "8000:8000"
+    volumes:
+      - /code/bells/app/node_modules
+      - ../django_base:/code/django_base:ro
+      - ./app:/code/bells/app:ro
 
 volumes:
   db-data:
   static_volume:
-
-# develop options use copying to the container volume
-#    develop:
-#      watch:
-#        - action: sync
-#          path: .
-#          target: /code/app
-#          ignore:
-#            - node_modules
 
 secrets:
   postgres_password:

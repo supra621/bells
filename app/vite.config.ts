@@ -6,7 +6,7 @@ export default defineConfig({
     appType: 'custom',
     base: "/assets/",
     plugins: [
-        solidPlugin(),
+        solidPlugin()
     ],
     build: {
         manifest: true,
@@ -21,12 +21,9 @@ export default defineConfig({
     },
     server: {
         host: true,
-        // hmr: {
-        //     port: 1235
-        // },
         strictPort: true,
-        // watch: {
-        //     usePolling: true
-        // }
     },
 });
+
+console.log(process.cwd());
+

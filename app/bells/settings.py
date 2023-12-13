@@ -159,6 +159,3 @@ VITE_CLIENT_URL = 'http://localhost:1234/assets/@vite/client'
 
 # VITE_URL = 'http://localhost:1234/'
 VITE_URL = 'assets/'
-
-print('settings')
-print(DEBUG)

@@ -14,7 +14,8 @@
     "isolatedModules": true,  // Vite recommendation,
     "noEmit": true,
     "resolveJsonModule": true,
-    "types": ["vite/client"],  // specify type package without including in source?
+    // Interestingly, this didn't work for a debug file I was using.
+    "types": ["vite/client"],  // specify type
 
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
